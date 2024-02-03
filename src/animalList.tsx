@@ -3,6 +3,7 @@ import { getDocs, collection } from "firebase/firestore";
 import { firestoreDb } from "./firebase.ts";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
+import { List } from "@mantine/core";
 
 export const AnimalList: FC = () => {
   const user = useAuthenticatedUser();
@@ -13,9 +14,7 @@ export const AnimalList: FC = () => {
   });
 
   return (
-    <>
-      <ul>{data?.map((a) => <li key={a.id}>{a.name}</li>)}</ul>
-    </>
+    <List>{data?.map((a) => <List.Item key={a.id}>{a.name}</List.Item>)}</List>
   );
 
   async function getAnimals() {
