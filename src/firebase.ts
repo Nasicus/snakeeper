@@ -13,3 +13,8 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 
 export const firestoreDb = getFirestore(firebaseApp);
+
+export function initializeFirebase() {
+  // no need to do anything, since it's done above already
+  // however this function is needed so we can "import" this file so something is executed
+}

@@ -6,12 +6,11 @@
 } from "firebase/auth";
 import { useState, useEffect } from "react";
 
-const auth = getAuth();
-
 export function useFireBaseAuthentication() {
   const [authenticatedUser, setAuthenticatedUser] = useState<
     User | undefined | null
   >(undefined);
+  const auth = getAuth();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
