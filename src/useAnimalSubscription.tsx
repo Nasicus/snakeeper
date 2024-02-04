@@ -18,7 +18,7 @@ export function useAnimalSubscription() {
 
   const [animals, setAnimals] = useState<AnimalDocument[]>([]);
 
-  useEffect(subscribeToAnimals, []);
+  useEffect(subscribeToAnimals, [user.uid]);
 
   return animals;
 
