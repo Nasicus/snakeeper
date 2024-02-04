@@ -12,7 +12,7 @@ import {
 import { useAnimalSubscription } from "./useAnimalSubscription.tsx";
 import { Animal, AnimalSex } from "./animal.ts";
 
-export const AnimalList: FC = () => {
+export const AnimalTable: FC = () => {
   const user = useAuthenticatedUser();
 
   const animals = useAnimalSubscription();
