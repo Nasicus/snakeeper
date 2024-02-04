@@ -1,14 +1,6 @@
 ﻿import { FC, useState, Dispatch, SetStateAction } from "react";
-import {
-  getDocs,
-  collection,
-  addDoc,
-  deleteDoc,
-  DocumentReference,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "./firebase.ts";
-import { useQuery } from "@tanstack/react-query";
 import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
 import { Table, Input, ActionIcon, Select } from "@mantine/core";
 import {
@@ -17,24 +9,13 @@ import {
   IconPencil,
   IconX,
 } from "@tabler/icons-react";
-
-type AnimalSex = "male" | "female";
-
-type Animal = {
-  id?: string;
-  name?: string;
-  type?: string;
-  subType?: string;
-  sex?: AnimalSex;
-};
+import { useAnimalSubscription } from "./useAnimalSubscription.tsx";
+import { Animal, AnimalSex } from "./animal.ts";
 
 export const AnimalList: FC = () => {
   const user = useAuthenticatedUser();
 
-  const { data, refetch } = useQuery({
-    queryKey: ["animals", user.uid],
-    queryFn: getAnimals,
-  });
+  const animals = useAnimalSubscription();
 
   const [animalToAdd, setAnimalToAdd] = useState<Animal | null>(null);
 
@@ -52,15 +33,15 @@ export const AnimalList: FC = () => {
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {data?.map((a) => (
-            <ExistingAnimalRow
+          {animals?.map((a) => (
+            <ReadOnlyAnimalRow
               key={a.id}
               animal={a}
-              onDelete={() => deleteAnimal(a.docRef)}
-              onUpdate={(u) => updateAnimal(a.docRef, u)}
+              onDelete={() => deleteDoc(a.docRef)}
+              onUpdate={(u) => updateDoc(a.docRef, u)}
             />
           ))}
-          <EditAnimalRow
+          <EditableAnimalRow
             animal={animalToAdd}
             changeAnimal={setAnimalToAdd}
             saveChanges={addAnimal}
@@ -70,56 +51,17 @@ export const AnimalList: FC = () => {
     </>
   );
 
-  async function getAnimals() {
-    try {
-      const animals = await getDocs(
-        collection(firestoreDb, `users/${user?.uid}/animals`),
-      );
-
-      return animals.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          name: data.name,
-          id: doc.id,
-          type: data.type,
-          subType: data.subType,
-          sex: data.sex,
-          docRef: doc.ref,
-        };
-      });
-    } catch (e) {
-      console.error("Error getting animals: ", e);
-    }
-  }
-
   async function addAnimal() {
     await addDoc(
       collection(firestoreDb, `users/${user.uid}/animals`),
       animalToAdd,
     );
 
-    await refetch();
-
     setAnimalToAdd(null);
-  }
-
-  async function updateAnimal(
-    docRef: DocumentReference,
-    updatedAnimal: Animal,
-  ) {
-    await updateDoc(docRef, updatedAnimal);
-
-    await refetch();
-  }
-
-  async function deleteAnimal(docRef: DocumentReference) {
-    await deleteDoc(docRef);
-
-    await refetch();
   }
 };
 
-const EditAnimalRow: FC<{
+const EditableAnimalRow: FC<{
   animal: Animal | null;
   changeAnimal: Dispatch<SetStateAction<Animal | null>>;
   saveChanges: () => unknown;
@@ -183,7 +125,7 @@ const EditAnimalRow: FC<{
   );
 };
 
-const ExistingAnimalRow: FC<{
+const ReadOnlyAnimalRow: FC<{
   animal: Animal;
   onDelete: () => unknown;
   onUpdate: (updatedAnimal: Animal) => unknown;
@@ -193,7 +135,7 @@ const ExistingAnimalRow: FC<{
 
   if (isEditMode) {
     return (
-      <EditAnimalRow
+      <EditableAnimalRow
         animal={animalToEdit}
         changeAnimal={setAnimalToEdit}
         cancelEdit={() => setAnimalToEdit(null)}
