@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { useAnimalSubscription } from "./useAnimalSubscription.tsx";
 import { Animal, AnimalSex } from "./animal.ts";
+import { Link } from "react-router-dom";
 
 export const AnimalTable: FC = () => {
   const user = useAuthenticatedUser();
@@ -149,7 +150,9 @@ const ReadOnlyAnimalRow: FC<{
 
   return (
     <Table.Tr>
-      <Table.Td>{animal.name}</Table.Td>
+      <Table.Td>
+        <Link to={`animals/${animal.id}`}>{animal.name}</Link>
+      </Table.Td>
       <Table.Td>{animal.type}</Table.Td>
       <Table.Td>{animal.subType}</Table.Td>
       <Table.Td>{animal.sex}</Table.Td>
