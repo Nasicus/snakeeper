@@ -1,5 +1,5 @@
 ﻿import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbYdobDsV0LkZbs2OpoHU0mAXBSehfVEw",
@@ -12,7 +12,9 @@ const firebaseConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 
-export const firestoreDb = getFirestore(firebaseApp);
+export const firestoreDb = initializeFirestore(firebaseApp, {
+  localCache: persistentLocalCache({}),
+});
 
 export function initializeFirebase() {
   // no need to do anything, since it's done above already
