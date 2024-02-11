@@ -2,16 +2,18 @@
 import { useParams, Link } from "react-router-dom";
 import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
 import {
-    Table,
-    ActionIcon,
-    Button,
-    Modal,
-    Select,
-    TextInput,
-    Switch,
-    Textarea,
-    NumberInput,
-    Flex, Title,
+  Table,
+  ActionIcon,
+  Button,
+  Modal,
+  Select,
+  TextInput,
+  Switch,
+  Textarea,
+  NumberInput,
+  Flex,
+  Title,
+  Text,
 } from "@mantine/core";
 import { addDoc, collection, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "./firebase.ts";
@@ -20,6 +22,7 @@ import {
   IconPlus,
   IconPencil,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import {
   useAnimalReportSubscription,
@@ -34,8 +37,14 @@ import {
 } from "./animalReportEntry.ts";
 import { DatePickerInput } from "@mantine/dates";
 import { useAnimalSubscription } from "./useAnimalSubscription.tsx";
+import { Animal } from "./animal.ts";
+import { AnimalNameEditor } from "./AnimalNameEditor.tsx";
+import { AnimalTypeEditor } from "./AnimalTypeEditor.tsx";
+import { AnimalSubTypeEditor } from "./AnimalSubTypeEditor.tsx";
+import { AnimalSexEditor } from "./AnimalSexEditor.tsx";
+import { AnimalDateOfBirthEditor } from "./AnimalDateOfBirthEditor.tsx";
 
-export const AnimalDetail: FC = () => {
+export const AnimalDetailPage: FC = () => {
   const { animalId } = useParams();
   const user = useAuthenticatedUser();
 
@@ -52,16 +61,20 @@ export const AnimalDetail: FC = () => {
 
   return (
     <>
-      <Flex align="center" justify="flex-start">
-        <Title order={2} mr="xs">{animal.name}</Title><Link to="/">Back</Link>
-      </Flex>
+      <AnimalDetails
+        animal={animal}
+        onUpdate={(u) => updateDoc(animal.docRef, u)}
+      />
 
-      <Title order={3}>Reports</Title>
-      <ActionIcon
-        onClick={() => setReportToAdd({ type: "feeding", date: new Date() })}
-      >
-        <IconPlus />
-      </ActionIcon>
+      <Flex align="center" justify="flex-start">
+        <Title order={3}>Reports</Title>
+        <ActionIcon
+          ml="sm"
+          onClick={() => setReportToAdd({ type: "feeding", date: new Date() })}
+        >
+          <IconPlus />
+        </ActionIcon>
+      </Flex>
       <Table striped>
         <Table.Thead>
           <Table.Tr>
@@ -147,6 +160,110 @@ const ReportRow: FC<{
         }}
         onCancel={() => setReportToEdit(null)}
       />
+    </>
+  );
+};
+
+const AnimalDetails: FC<{
+  animal: Animal;
+  onUpdate: (animal: Animal) => unknown;
+}> = ({ animal, onUpdate }) => {
+  const [animalToEdit, setAnimalToEdit] = useState<Animal | null>(null);
+  const isEditMode = !!animalToEdit;
+
+  return (
+    <>
+      <Flex align="center" justify="flex-start">
+        {!isEditMode && (
+          <Title order={2} mr="sm">
+            {animal.name}
+          </Title>
+        )}
+        {isEditMode && (
+          <AnimalNameEditor
+            animal={animalToEdit}
+            changeAnimal={setAnimalToEdit}
+          />
+        )}
+        {!isEditMode && (
+          <>
+            <ActionIcon onClick={() => setAnimalToEdit(animal)} mr="sm">
+              <IconPencil />
+            </ActionIcon>
+            <Link to="/">Back</Link>
+          </>
+        )}
+        {isEditMode && (
+          <>
+            <ActionIcon
+              onClick={() => {
+                onUpdate(animalToEdit);
+                setAnimalToEdit(null);
+              }}
+              disabled={!animalToEdit?.name}
+              ml="sm"
+              mr="sm"
+            >
+              <IconDeviceFloppy />
+            </ActionIcon>
+            <ActionIcon onClick={() => setAnimalToEdit(null)}>
+              <IconX />
+            </ActionIcon>
+          </>
+        )}
+      </Flex>
+
+      <Flex justify="space-between" mt="sm" mb="xl">
+        <div>
+          <Text fw={700} display="block">
+            Type
+          </Text>
+          {!isEditMode && animal.type}
+          {isEditMode && (
+            <AnimalTypeEditor
+              animal={animalToEdit}
+              changeAnimal={setAnimalToEdit}
+            />
+          )}
+        </div>
+        <div>
+          <Text fw={700} display="block">
+            Subtype
+          </Text>
+          {!isEditMode && animal.subType}
+          {isEditMode && (
+            <AnimalSubTypeEditor
+              animal={animalToEdit}
+              changeAnimal={setAnimalToEdit}
+            />
+          )}
+        </div>
+        <div>
+          <Text fw={700} display="block">
+            Sex
+          </Text>
+          {!isEditMode && animal.sex}
+          {isEditMode && (
+            <AnimalSexEditor
+              animal={animalToEdit}
+              changeAnimal={setAnimalToEdit}
+            />
+          )}
+        </div>
+        <div>
+          <Text fw={700} display="block">
+            Date Of Birth
+          </Text>
+
+          {!isEditMode && <>{animal.dateOfBirth?.toDateString() || "-"}</>}
+          {isEditMode && (
+            <AnimalDateOfBirthEditor
+              animal={animalToEdit}
+              changeAnimal={setAnimalToEdit}
+            />
+          )}
+        </div>
+      </Flex>
     </>
   );
 };
@@ -240,15 +357,15 @@ const AddReport: FC<{
         }
       />
       {report?.type === "feeding" && (
-        <FeedActivityEdit report={report} updateReport={updateReport} />
+        <FeedActivityEditor report={report} updateReport={updateReport} />
       )}
 
       {report?.type === "shedding" && (
-        <SheddingActivityEdit report={report} updateReport={updateReport} />
+        <SheddingActivityEditor report={report} updateReport={updateReport} />
       )}
 
       {report?.type === "weighing" && (
-        <WeighingActivityEdit report={report} updateReport={updateReport} />
+        <WeighingActivityEditor report={report} updateReport={updateReport} />
       )}
 
       <Textarea
@@ -273,7 +390,7 @@ const AddReport: FC<{
   );
 };
 
-const FeedActivityEdit: FC<{
+const FeedActivityEditor: FC<{
   report: AnimalReportEntry;
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
 }> = ({ report, updateReport }) => {
@@ -305,7 +422,7 @@ const FeedActivityEdit: FC<{
   );
 };
 
-const SheddingActivityEdit: FC<{
+const SheddingActivityEditor: FC<{
   report: AnimalReportEntry;
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
 }> = ({ report, updateReport }) => {
@@ -324,7 +441,7 @@ const SheddingActivityEdit: FC<{
   );
 };
 
-const WeighingActivityEdit: FC<{
+const WeighingActivityEditor: FC<{
   report: AnimalReportEntry;
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
 }> = ({ report, updateReport }) => {

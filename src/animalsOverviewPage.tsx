@@ -2,7 +2,7 @@
 import { collection, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "./firebase.ts";
 import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
-import {Table, Input, ActionIcon, Select, Title} from "@mantine/core";
+import { Table, ActionIcon, Title } from "@mantine/core";
 import {
   IconDeviceFloppy,
   IconTrash,
@@ -10,10 +10,14 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useAnimalsSubscription } from "./useAnimalsSubscription.tsx";
-import { Animal, AnimalSex } from "./animal.ts";
+import { Animal } from "./animal.ts";
 import { Link } from "react-router-dom";
+import { AnimalNameEditor } from "./AnimalNameEditor.tsx";
+import { AnimalTypeEditor } from "./AnimalTypeEditor.tsx";
+import { AnimalSubTypeEditor } from "./AnimalSubTypeEditor.tsx";
+import { AnimalSexEditor } from "./AnimalSexEditor.tsx";
 
-export const AnimalTable: FC = () => {
+export const AnimalsOverviewPage: FC = () => {
   const user = useAuthenticatedUser();
 
   const animals = useAnimalsSubscription();
@@ -71,46 +75,16 @@ const EditableAnimalRow: FC<{
   return (
     <Table.Tr>
       <Table.Td>
-        <Input
-          value={animal?.name ?? ""}
-          onChange={(e) =>
-            changeAnimal((a) => ({ ...a, name: e.currentTarget.value }))
-          }
-        />
+        <AnimalNameEditor animal={animal} changeAnimal={changeAnimal} />
       </Table.Td>
       <Table.Td>
-        <Input
-          value={animal?.type ?? ""}
-          onChange={(e) =>
-            changeAnimal((a) => ({ ...a, type: e.currentTarget.value }))
-          }
-        />
+        <AnimalTypeEditor animal={animal} changeAnimal={changeAnimal} />
       </Table.Td>
       <Table.Td>
-        <Input
-          value={animal?.subType ?? ""}
-          onChange={(e) =>
-            changeAnimal((a) => ({
-              ...a,
-              subType: e.currentTarget.value,
-            }))
-          }
-        />
+        <AnimalSubTypeEditor animal={animal} changeAnimal={changeAnimal} />
       </Table.Td>
       <Table.Td>
-        <Select
-          value={animal?.sex}
-          data={[
-            { value: "male", label: "Male" },
-            { value: "female", label: "Female" },
-          ]}
-          onChange={(v) =>
-            changeAnimal((a) => ({
-              ...a,
-              sex: (v as AnimalSex) ?? undefined,
-            }))
-          }
-        />
+        <AnimalSexEditor animal={animal} changeAnimal={changeAnimal} />
       </Table.Td>
       <Table.Td>
         <ActionIcon disabled={!animal?.name} onClick={saveChanges}>

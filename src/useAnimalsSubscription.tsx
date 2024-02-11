@@ -35,6 +35,7 @@ export function useAnimalsSubscription() {
               type: data.type,
               subType: data.subType,
               sex: data.sex,
+              dateOfBirth: data.dateOfBirth?.toDate(),
               docRef: doc.ref,
             };
           }),

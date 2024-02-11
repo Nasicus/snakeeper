@@ -38,6 +38,7 @@ export function useAnimalSubscription(animalId?: string) {
           type: data.type,
           subType: data.subType,
           sex: data.sex,
+          dateOfBirth: data.dateOfBirth?.toDate(),
           docRef: doc.ref,
         });
       },

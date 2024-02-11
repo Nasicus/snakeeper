@@ -1,20 +1,20 @@
 import { FC } from "react";
 import { AuthGuard } from "./authGuard.tsx";
-import { AnimalTable } from "./animalTable.tsx";
+import { AnimalsOverviewPage } from "./animalsOverviewPage.tsx";
 import classes from "./app.module.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AnimalDetail } from "./animalDetail.tsx";
+import { AnimalDetailPage } from "./animalDetailPage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AnimalTable />,
-    errorElement: <AnimalTable />,
+    element: <AnimalsOverviewPage />,
+    errorElement: <AnimalsOverviewPage />,
   },
   {
     path: "/animals/:animalId",
-    element: <AnimalDetail />,
-    errorElement: <AnimalDetail />,
+    element: <AnimalDetailPage />,
+    errorElement: <AnimalDetailPage />,
     
   },
 ]);
