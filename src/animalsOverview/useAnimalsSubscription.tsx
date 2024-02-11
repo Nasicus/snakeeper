@@ -4,10 +4,10 @@
   query,
   collection,
 } from "firebase/firestore";
-import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
+import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { useState, useEffect } from "react";
-import { firestoreDb } from "./firebase.ts";
-import { Animal } from "./animal.ts";
+import { firestoreDb } from "../firebase.ts";
+import { Animal } from "../animal/animal.ts";
 
 type AnimalDocument = Animal & {
   docRef: DocumentReference;

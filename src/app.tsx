@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { AuthGuard } from "./authGuard.tsx";
-import { AnimalsOverviewPage } from "./animalsOverviewPage.tsx";
+import { AuthGuard } from "./authentication/authGuard.tsx";
 import classes from "./app.module.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AnimalDetailPage } from "./animalDetailPage.tsx";
+import { AnimalDetailPage } from "./animalDetail/animalDetailPage.tsx";
+import { AnimalsOverviewPage } from "./animalsOverview/animalsOverviewPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +15,6 @@ const router = createBrowserRouter([
     path: "/animals/:animalId",
     element: <AnimalDetailPage />,
     errorElement: <AnimalDetailPage />,
-    
   },
 ]);
 

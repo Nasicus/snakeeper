@@ -1,5 +1,5 @@
 ﻿import { FC, Dispatch, SetStateAction } from "react";
-import { Animal } from "./animal.ts";
+import { Animal } from "../animal.ts";
 import { DateInput } from "@mantine/dates";
 
 export const AnimalDateOfBirthEditor: FC<{

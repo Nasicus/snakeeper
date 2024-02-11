@@ -4,9 +4,9 @@
   query,
   collection,
 } from "firebase/firestore";
-import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
+import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { useState, useEffect } from "react";
-import { firestoreDb } from "./firebase.ts";
+import { firestoreDb } from "../firebase.ts";
 import { AnimalReportEntry } from "./animalReportEntry.ts";
 
 export type AnimalReportEntryDocument = AnimalReportEntry & {

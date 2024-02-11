@@ -1,6 +1,6 @@
 ﻿import { FC, Dispatch, SetStateAction } from "react";
 import { Input } from "@mantine/core";
-import { Animal } from "./animal.ts";
+import { Animal } from "../animal.ts";
 
 export const AnimalTypeEditor: FC<{
   animal: Animal | null;
