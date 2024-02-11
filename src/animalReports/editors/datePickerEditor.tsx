@@ -10,7 +10,7 @@ export const DatePickerEditor: FC<{
   const lastDate = previousReports[0]?.date;
 
   useEffect(() => {
-    if (lastDate && !report?.date) {
+    if (report && lastDate && !report?.date) {
       changeDate(lastDate);
     }
   }, [lastDate]);
