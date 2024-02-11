@@ -30,3 +30,10 @@ export const ShedType = {
 type ShedTypeKeys = keyof typeof ShedType;
 
 export type ShedTypeValues = (typeof ShedType)[ShedTypeKeys];
+
+export const shedTypeExpectedOrder = {
+  [ShedType.Started]: ShedType.Success,
+  [ShedType.Partial]: ShedType.Started,
+  [ShedType.Success]: ShedType.Started,
+  [ShedType.Failed]: ShedType.Started,
+};

@@ -15,6 +15,10 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
   const user = useAuthenticatedUser();
 
   const reports = useAnimalReportSubscription(animalId);
+  const sortedReports = reports.sort(
+    (a, b) =>
+      (b.date || new Date()).getTime() - (a.date || new Date()).getTime(),
+  );
 
   const [reportToAdd, setReportToAdd] = useState<AnimalReportEntry | null>(
     null,
@@ -41,24 +45,20 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {reports
-            .sort(
-              (a, b) =>
-                (b.date || new Date()).getTime() -
-                (a.date || new Date()).getTime(),
-            )
-            .map((report) => (
-              <ReportRow
-                key={report.id}
-                report={report}
-                onUpdate={(u) => updateDoc(report.docRef, u)}
-                onDelete={() => deleteDoc(report.docRef)}
-              />
-            ))}
+          {sortedReports.map((report) => (
+            <ReportRow
+              key={report.id}
+              report={report}
+              onUpdate={(u) => updateDoc(report.docRef, u)}
+              onDelete={() => deleteDoc(report.docRef)}
+              previousReports={sortedReports}
+            />
+          ))}
         </Table.Tbody>
       </Table>
       <AddReport
         report={reportToAdd}
+        previousReports={reports}
         updateReport={setReportToAdd}
         onSave={addReport}
         onCancel={() => setReportToAdd(null)}

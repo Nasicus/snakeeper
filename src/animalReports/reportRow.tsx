@@ -12,7 +12,8 @@ export const ReportRow: FC<{
   report: AnimalReportEntryDocument;
   onDelete: () => unknown;
   onUpdate: (update: AnimalReportEntry) => unknown;
-}> = ({ report, onUpdate, onDelete }) => {
+  previousReports: AnimalReportEntry[];
+}> = ({ report, onUpdate, onDelete, previousReports }) => {
   const [reportToEdit, setReportToEdit] = useState<AnimalReportEntry | null>(
     null,
   );
@@ -38,6 +39,7 @@ export const ReportRow: FC<{
       </Table.Tr>
       <AddReport
         report={reportToEdit}
+        previousReports={previousReports}
         updateReport={setReportToEdit}
         onSave={() => {
           onUpdate(reportToEdit!);

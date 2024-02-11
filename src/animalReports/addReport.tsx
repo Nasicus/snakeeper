@@ -13,10 +13,11 @@ import { WeighingActivityEditor } from "./activities/editors/weighingActivityEdi
 
 export const AddReport: FC<{
   report: AnimalReportEntry | null;
+  previousReports: AnimalReportEntry[];
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
   onSave: () => unknown;
   onCancel: () => unknown;
-}> = ({ report, updateReport, onSave, onCancel }) => {
+}> = ({ report, previousReports, updateReport, onSave, onCancel }) => {
   return (
     <Modal
       opened={!!report}
@@ -50,15 +51,27 @@ export const AddReport: FC<{
         }
       />
       {report?.type === "feeding" && (
-        <FeedActivityEditor report={report} updateReport={updateReport} />
+        <FeedActivityEditor
+          report={report}
+          updateReport={updateReport}
+          previousReports={previousReports}
+        />
       )}
 
       {report?.type === "shedding" && (
-        <SheddingActivityEditor report={report} updateReport={updateReport} />
+        <SheddingActivityEditor
+          report={report}
+          updateReport={updateReport}
+          previousReports={previousReports}
+        />
       )}
 
       {report?.type === "weighing" && (
-        <WeighingActivityEditor report={report} updateReport={updateReport} />
+        <WeighingActivityEditor
+          report={report}
+          updateReport={updateReport}
+          previousReports={previousReports}
+        />
       )}
 
       <Textarea
