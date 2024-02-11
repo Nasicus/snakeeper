@@ -5,11 +5,11 @@ import {
   ReportTypeValues,
 } from "./animalReportEntry.ts";
 import { Modal, Select, Textarea, Button } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { FeedActivityEditor } from "./activities/editors/feedActivityEditor.tsx";
 import { SheddingActivityEditor } from "./activities/editors/sheddingActivityEditor.tsx";
 import { WeighingActivityEditor } from "./activities/editors/weighingActivityEditor.tsx";
+import { DatePickerEditor } from "./editors/datePickerEditor.tsx";
 
 export const AddReport: FC<{
   report: AnimalReportEntry | null;
@@ -25,16 +25,12 @@ export const AddReport: FC<{
       onClose={onCancel}
       title="Add report"
     >
-      <DatePickerInput
-        label="When"
-        value={report?.date}
-        onChange={(v) =>
-          updateReport((prev) => ({
-            ...prev,
-            date: v || new Date(),
-          }))
-        }
+      <DatePickerEditor
+        report={report}
+        updateReport={updateReport}
+        previousReports={previousReports}
       />
+
       <Select
         label="What"
         value={report?.type}

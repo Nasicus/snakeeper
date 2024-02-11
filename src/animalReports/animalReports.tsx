@@ -28,10 +28,7 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
     <>
       <Flex align="center" justify="flex-start">
         <Title order={3}>Reports</Title>
-        <ActionIcon
-          ml="sm"
-          onClick={() => setReportToAdd({ type: "feeding", date: new Date() })}
-        >
+        <ActionIcon ml="sm" onClick={() => setReportToAdd({ type: "feeding" })}>
           <IconPlus />
         </ActionIcon>
       </Flex>
