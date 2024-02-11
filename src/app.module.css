@@ -4,6 +4,6 @@ margin: auto;
     @media (min-width: 1000px)
     {
         margin-top: 50px;
-        width: 50vw;
+        width: 75vw;
     }
 }

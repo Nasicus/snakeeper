@@ -2,27 +2,27 @@
 import { collection, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "./firebase.ts";
 import { useAuthenticatedUser } from "./authenticatedUserContext.tsx";
-import { Table, Input, ActionIcon, Select } from "@mantine/core";
+import {Table, Input, ActionIcon, Select, Title} from "@mantine/core";
 import {
   IconDeviceFloppy,
   IconTrash,
   IconPencil,
   IconX,
 } from "@tabler/icons-react";
-import { useAnimalSubscription } from "./useAnimalSubscription.tsx";
+import { useAnimalsSubscription } from "./useAnimalsSubscription.tsx";
 import { Animal, AnimalSex } from "./animal.ts";
 import { Link } from "react-router-dom";
 
 export const AnimalTable: FC = () => {
   const user = useAuthenticatedUser();
 
-  const animals = useAnimalSubscription();
+  const animals = useAnimalsSubscription();
 
   const [animalToAdd, setAnimalToAdd] = useState<Animal | null>(null);
 
   return (
     <>
-      <h2>Animals</h2>
+      <Title order={2}>Animals</Title>
       <Table striped>
         <Table.Thead>
           <Table.Tr>

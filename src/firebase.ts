@@ -14,6 +14,7 @@ export const firebaseApp = initializeApp(firebaseConfig);
 
 export const firestoreDb = initializeFirestore(firebaseApp, {
   localCache: persistentLocalCache({}),
+  ignoreUndefinedProperties: true,
 });
 
 export function initializeFirebase() {

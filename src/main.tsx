@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { App } from "./app.tsx";
 import { initializeFirebase } from "./firebase.ts";
 import "@mantine/core/styles.css";
+import '@mantine/dates/styles.css';
 import { MantineProvider } from "@mantine/core";
 
 initializeFirebase();
