@@ -16,9 +16,9 @@ export const SheddingActivityEditor: FC<{
     (r) => r.type === "shedding" && !!r.shedType,
   )?.shedType;
 
-  const nextShedType = latestShedType
+  const nextShedType: ShedTypeValues = latestShedType
     ? shedTypeExpectedOrder[latestShedType]
-    : "started";
+    : "success";
 
   useEffect(() => {
     if (!report.shedType) {

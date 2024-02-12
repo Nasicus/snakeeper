@@ -21,6 +21,7 @@ type ReportTypeKeys = keyof typeof ReportType;
 export type ReportTypeValues = (typeof ReportType)[ReportTypeKeys];
 
 export const ShedType = {
+  ProbablyStarted: "started_probably",
   Started: "started",
   Partial: "partial",
   Success: "success",
@@ -32,6 +33,7 @@ type ShedTypeKeys = keyof typeof ShedType;
 export type ShedTypeValues = (typeof ShedType)[ShedTypeKeys];
 
 export const shedTypeExpectedOrder = {
+  [ShedType.ProbablyStarted]: ShedType.Success,
   [ShedType.Started]: ShedType.Success,
   [ShedType.Partial]: ShedType.Started,
   [ShedType.Success]: ShedType.Started,
