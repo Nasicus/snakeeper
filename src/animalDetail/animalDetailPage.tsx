@@ -20,7 +20,12 @@ export const AnimalDetailPage: FC = () => {
         animal={animal}
         onUpdate={(u) => updateDoc(animal.docRef, u)}
       />
-      <AnimalReports animalId={animalId} />
+      <AnimalReports
+        animalId={animalId}
+        updateAnimalFields={(u) =>
+          updateDoc(animal.docRef, { ...animal, ...u })
+        }
+      />
     </>
   );
 };

@@ -1,17 +1,11 @@
-﻿import {
-  DocumentReference,
-  onSnapshot,
-  query,
-  collection,
-} from "firebase/firestore";
+﻿import { onSnapshot, query, collection } from "firebase/firestore";
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { useState, useEffect } from "react";
 import { firestoreDb } from "../firebase.ts";
-import { Animal } from "../animal/animal.ts";
-
-type AnimalDocument = Animal & {
-  docRef: DocumentReference;
-};
+import {
+  AnimalDocument,
+  mapAnimalDocument,
+} from "../animal/mapAnimalDocument.ts";
 
 export function useAnimalsSubscription() {
   const user = useAuthenticatedUser();
@@ -28,16 +22,7 @@ export function useAnimalsSubscription() {
       (snapshot) => {
         setAnimals(
           snapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-              name: data.name,
-              id: doc.id,
-              type: data.type,
-              subType: data.subType,
-              sex: data.sex,
-              dateOfBirth: data.dateOfBirth?.toDate(),
-              docRef: doc.ref,
-            };
+            return mapAnimalDocument(doc)!;
           }),
         );
       },

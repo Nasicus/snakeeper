@@ -14,6 +14,8 @@ export const ReportType = {
   Shedding: "shedding",
   Weighing: "weighing",
   Misc: "misc",
+  Born: "born",
+  Died: "died",
 } as const;
 
 type ReportTypeKeys = keyof typeof ReportType;

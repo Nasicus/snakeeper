@@ -8,10 +8,12 @@ import { updateDoc, deleteDoc, addDoc, collection } from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
 import { ReportRow } from "./reportRow.tsx";
 import { AddReport } from "./addReport.tsx";
+import { Animal } from "../animal/animal.ts";
 
-export const AnimalReports: FC<{ animalId: string | undefined }> = ({
-  animalId,
-}) => {
+export const AnimalReports: FC<{
+  animalId: string | undefined;
+  updateAnimalFields: (animal: Partial<Animal>) => unknown;
+}> = ({ animalId, updateAnimalFields }) => {
   const user = useAuthenticatedUser();
 
   const reports = useAnimalReportSubscription(animalId);
@@ -28,7 +30,10 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
     <>
       <Flex align="center" justify="flex-start">
         <Title order={3}>Reports</Title>
-        <ActionIcon ml="sm" onClick={() => setReportToAdd({ type: "feeding" })}>
+        <ActionIcon
+          ml="sm"
+          onClick={() => setReportToAdd({ type: "weighing" })}
+        >
           <IconPlus />
         </ActionIcon>
       </Flex>
@@ -46,7 +51,10 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
             <ReportRow
               key={report.id}
               report={report}
-              onUpdate={(u) => updateDoc(report.docRef, u)}
+              onUpdate={async (u) => {
+                await updateDoc(report.docRef, u);
+                updateAnimalIfRequired(u);
+              }}
               onDelete={() => deleteDoc(report.docRef)}
               previousReports={sortedReports}
             />
@@ -72,6 +80,17 @@ export const AnimalReports: FC<{ animalId: string | undefined }> = ({
       collection(firestoreDb, `users/${user.uid}/animals/${animalId}/reports`),
       reportToAdd,
     );
+
+    updateAnimalIfRequired(reportToAdd);
+
     setReportToAdd(null);
+  }
+
+  function updateAnimalIfRequired(report: AnimalReportEntry) {
+    if (report.type !== "born") {
+      return;
+    }
+
+    updateAnimalFields({ dateOfBirth: report.date });
   }
 };

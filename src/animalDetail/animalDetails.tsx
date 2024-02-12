@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { AnimalTypeEditor } from "../animal/editors/AnimalTypeEditor.tsx";
 import { AnimalSubTypeEditor } from "../animal/editors/AnimalSubTypeEditor.tsx";
 import { AnimalSexEditor } from "../animal/editors/AnimalSexEditor.tsx";
-import { AnimalDateOfBirthEditor } from "../animal/editors/AnimalDateOfBirthEditor.tsx";
 
 export const AnimalDetails: FC<{
   animal: Animal;
@@ -100,13 +99,7 @@ export const AnimalDetails: FC<{
             Date Of Birth
           </Text>
 
-          {!isEditMode && <>{animal.dateOfBirth?.toDateString() || "-"}</>}
-          {isEditMode && (
-            <AnimalDateOfBirthEditor
-              animal={animalToEdit}
-              changeAnimal={setAnimalToEdit}
-            />
-          )}
+          {animal.dateOfBirth?.toDateString() || "-"}
         </div>
       </Flex>
     </>

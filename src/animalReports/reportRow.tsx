@@ -7,6 +7,7 @@ import { FeedActivity } from "./activities/feedActivity.tsx";
 import { ShedActivity } from "./activities/shedActivity.tsx";
 import { WeighingActivity } from "./activities/weighingActivity.tsx";
 import { AddReport } from "./addReport.tsx";
+import { ActivityType } from "./activities/activityType.tsx";
 
 export const ReportRow: FC<{
   report: AnimalReportEntryDocument;
@@ -26,6 +27,9 @@ export const ReportRow: FC<{
           {report.type === "feeding" && <FeedActivity report={report} />}
           {report.type === "shedding" && <ShedActivity report={report} />}
           {report.type === "weighing" && <WeighingActivity report={report} />}
+          {(report.type === "born" || report.type == "died") && (
+            <ActivityType type={report.type} />
+          )}
         </Table.Td>
         <Table.Td>{report.notes}</Table.Td>
         <Table.Td>

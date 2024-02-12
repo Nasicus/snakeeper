@@ -4,6 +4,8 @@
   type?: string;
   subType?: string;
   sex?: AnimalSex;
+  
+  // the following fields are set via reports
   dateOfBirth?: Date;
 };
 
