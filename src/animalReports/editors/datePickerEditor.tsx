@@ -1,4 +1,4 @@
-﻿import { DatePickerInput } from "@mantine/dates";
+﻿import { DatePicker } from "@mantine/dates";
 import { FC, Dispatch, SetStateAction, useEffect } from "react";
 import { AnimalReportEntry } from "../animalReportEntry.ts";
 
@@ -16,11 +16,14 @@ export const DatePickerEditor: FC<{
   }, [lastDate]);
 
   return (
-    <DatePickerInput
-      label="When"
-      value={report?.date || lastDate}
-      onChange={changeDate}
-    />
+    <>
+      <strong>When</strong>
+      <DatePicker
+        defaultDate={report?.date || lastDate}
+        value={report?.date || lastDate}
+        onChange={changeDate}
+      />
+    </>
   );
 
   function changeDate(v: Date | null) {
