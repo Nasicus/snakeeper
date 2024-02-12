@@ -17,18 +17,19 @@ export const FeedActivityEditor: FC<{
     }
   }, [latestFoodType]);
 
+  useEffect(() => {
+    if (report.didEat === undefined) {
+      changeDidEat(true);
+    }
+  }, []);
+
   return (
     <>
       <Switch
         mt="xs"
         label="Did eat"
-        checked={report.didEat}
-        onChange={(e) =>
-          updateReport((prev) => ({
-            ...prev,
-            didEat: e.currentTarget.checked,
-          }))
-        }
+        checked={report.didEat === undefined ? true : report.didEat}
+        onChange={(e) => changeDidEat(e.currentTarget.checked)}
       />
 
       <TextInput
@@ -44,6 +45,13 @@ export const FeedActivityEditor: FC<{
     updateReport((prev) => ({
       ...prev,
       foodType: newFoodType,
+    }));
+  }
+
+  function changeDidEat(didEat: boolean) {
+    updateReport((prev) => ({
+      ...prev,
+      didEat,
     }));
   }
 };
