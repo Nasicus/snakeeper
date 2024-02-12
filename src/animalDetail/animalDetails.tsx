@@ -99,9 +99,24 @@ export const AnimalDetails: FC<{
             Date Of Birth
           </Text>
 
-          {animal.dateOfBirth?.toDateString() || "-"}
+          {animal.dateOfBirth ? (
+            <>
+              {animal.dateOfBirth.toDateString()} ({getAge(animal.dateOfBirth)})
+            </>
+          ) : (
+            "-"
+          )}
         </div>
       </Flex>
     </>
   );
+
+  function getAge(date: Date) {
+    const now = new Date();
+    let months: number;
+    months = (now.getFullYear() - date.getFullYear()) * 12;
+    months -= date.getMonth();
+    months += now.getMonth();
+    return months <= 0 ? `-` : `${(months/12).toFixed(1)} years`;
+  }
 };
