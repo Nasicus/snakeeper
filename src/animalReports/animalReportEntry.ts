@@ -37,7 +37,7 @@ export type ShedTypeValues = (typeof ShedType)[ShedTypeKeys];
 export const shedTypeExpectedOrder = {
   [ShedType.ProbablyStarted]: ShedType.Success,
   [ShedType.Started]: ShedType.Success,
-  [ShedType.Partial]: ShedType.Started,
-  [ShedType.Success]: ShedType.Started,
-  [ShedType.Failed]: ShedType.Started,
+  [ShedType.Partial]: ShedType.Success,
+  [ShedType.Success]: ShedType.Success,
+  [ShedType.Failed]: ShedType.Success,
 };
