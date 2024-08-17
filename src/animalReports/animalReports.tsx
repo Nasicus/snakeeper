@@ -2,7 +2,7 @@
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { useAnimalReportSubscription } from "./useAnimalReportSubscription.tsx";
 import { AnimalReportEntry } from "./animalReportEntry.ts";
-import { Flex, Title, ActionIcon, Table } from "@mantine/core";
+import { Flex, Title, ActionIcon, Table, Switch } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { updateDoc, deleteDoc, addDoc, collection } from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
@@ -26,6 +26,10 @@ export const AnimalReports: FC<{
     null,
   );
 
+  const [defaultDateMode, setDefaultDateMode] = useState<
+    "today" | "lastReport"
+  >("today");
+
   return (
     <>
       <Flex align="center" justify="flex-start">
@@ -36,6 +40,18 @@ export const AnimalReports: FC<{
         >
           <IconPlus />
         </ActionIcon>
+        <Switch
+          ml="xs"
+          label={
+            defaultDateMode === "today"
+              ? "Use 'Today' as default date"
+              : "Use last report date as default date"
+          }
+          checked={defaultDateMode === "today"}
+          onChange={(e) =>
+            setDefaultDateMode(e.currentTarget.checked ? "today" : "lastReport")
+          }
+        />
       </Flex>
       <Table striped>
         <Table.Thead>
@@ -63,6 +79,7 @@ export const AnimalReports: FC<{
       </Table>
       <AddReport
         report={reportToAdd}
+        defaultDateMode={defaultDateMode}
         previousReports={reports}
         updateReport={setReportToAdd}
         onSave={addReport}

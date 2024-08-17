@@ -13,11 +13,19 @@ import { DatePickerEditor } from "./editors/datePickerEditor.tsx";
 
 export const AddReport: FC<{
   report: AnimalReportEntry | null;
+  defaultDateMode?: "today" | "lastReport";
   previousReports: AnimalReportEntry[];
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
   onSave: () => unknown;
   onCancel: () => unknown;
-}> = ({ report, previousReports, updateReport, onSave, onCancel }) => {
+}> = ({
+  report,
+  previousReports,
+  updateReport,
+  onSave,
+  defaultDateMode,
+  onCancel,
+}) => {
   return (
     <Modal
       opened={!!report}
@@ -28,7 +36,9 @@ export const AddReport: FC<{
       <DatePickerEditor
         report={report}
         updateReport={updateReport}
-        previousReports={previousReports}
+        defaultDate={
+          defaultDateMode === "today" ? new Date() : previousReports[0]?.date
+        }
       />
 
       <Select

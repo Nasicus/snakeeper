@@ -5,9 +5,9 @@ import { AnimalReportEntry } from "../animalReportEntry.ts";
 export const DatePickerEditor: FC<{
   report: AnimalReportEntry | null;
   updateReport: Dispatch<SetStateAction<AnimalReportEntry | null>>;
-  previousReports: AnimalReportEntry[];
-}> = ({ report, previousReports, updateReport }) => {
-  const lastDate = previousReports[0]?.date;
+  defaultDate?: Date;
+}> = ({ report, defaultDate, updateReport }) => {
+  const lastDate = defaultDate;
 
   useEffect(() => {
     if (report && lastDate && !report?.date) {
