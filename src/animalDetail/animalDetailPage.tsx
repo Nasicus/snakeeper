@@ -12,10 +12,10 @@ import { IconList, IconChartLine } from "@tabler/icons-react";
 export const AnimalDetailPage: FC = () => {
   const { animalId } = useParams();
 
-  const { animal, isLoading } = useAnimalSubscription(animalId);
-  const reports = useAnimalReportSubscription(animalId);
+  const { animal, isLoading: isAnimalLoading } = useAnimalSubscription(animalId);
+  const { reports, isLoading: isReportsLoading } = useAnimalReportSubscription(animalId);
 
-  if (isLoading) {
+  if (isAnimalLoading || isReportsLoading) {
     return (
       <Center py="xl">
         <Loader color="snake" />

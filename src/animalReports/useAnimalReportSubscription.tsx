@@ -17,16 +17,18 @@ export function useAnimalReportSubscription(animalId?: string) {
   const user = useAuthenticatedUser();
 
   const [reports, setReports] = useState<AnimalReportEntryDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(subscribeToReports, [user.uid, animalId]);
 
-  return reports;
+  return { reports, isLoading };
 
   function subscribeToReports() {
     if (!animalId) {
       return;
     }
 
+    setIsLoading(true);
     return onSnapshot(
       query(
         collection(
@@ -53,6 +55,7 @@ export function useAnimalReportSubscription(animalId?: string) {
             return report;
           }),
         );
+        setIsLoading(false);
       },
     );
   }
