@@ -8,27 +8,24 @@ export function useAnimalSubscription(animalId?: string) {
   const user = useAuthenticatedUser();
 
   const [animal, setAnimal] = useState<AnimalDocument | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(subscribeToAnimal, [user.uid, animalId]);
 
-  return animal;
+  return { animal, isLoading };
 
   function subscribeToAnimal() {
     if (!animalId) {
       return;
     }
 
+    setIsLoading(true);
     return onSnapshot(
       doc(firestoreDb, `users/${user?.uid}/animals`, animalId),
       (doc) => {
         const animalDocument = mapAnimalDocument(doc);
-
-        if (!animalDocument) {
-          setAnimal(null);
-          return;
-        }
-
         setAnimal(animalDocument);
+        setIsLoading(false);
       },
     );
   }
