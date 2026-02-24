@@ -33,7 +33,7 @@ export const AnimalDetailPage: FC = () => {
         animal={animal}
         onUpdate={(u) => updateDoc(animal.docRef, u)}
       />
-      <Tabs defaultValue="reports">
+      <Tabs defaultValue="reports" keepMounted={false}>
         <Tabs.List>
           <Tabs.Tab value="reports" leftSection={<IconList size={16} />}>
             Reports
