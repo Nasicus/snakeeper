@@ -1,9 +1,10 @@
-﻿import { FC } from "react";
+import { FC } from "react";
 import { useParams } from "react-router-dom";
 import { updateDoc } from "firebase/firestore";
 import { useAnimalSubscription } from "../animal/useAnimalSubscription.tsx";
 import { AnimalDetails } from "./animalDetails.tsx";
 import { AnimalReports } from "../animalReports/animalReports.tsx";
+import { Stack, Text } from "@mantine/core";
 
 export const AnimalDetailPage: FC = () => {
   const { animalId } = useParams();
@@ -11,11 +12,11 @@ export const AnimalDetailPage: FC = () => {
   const animal = useAnimalSubscription(animalId);
 
   if (!animal) {
-    return <>Animal does not exist.</>;
+    return <Text c="dimmed">Animal does not exist.</Text>;
   }
 
   return (
-    <>
+    <Stack gap="lg">
       <AnimalDetails
         animal={animal}
         onUpdate={(u) => updateDoc(animal.docRef, u)}
@@ -26,6 +27,6 @@ export const AnimalDetailPage: FC = () => {
           updateDoc(animal.docRef, { ...animal, ...u })
         }
       />
-    </>
+    </Stack>
   );
 };

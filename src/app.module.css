@@ -1,9 +1,0 @@
-﻿.host {
-margin: auto;
-
-    @media (min-width: 1000px)
-    {
-        margin-top: 50px;
-        width: 75vw;
-    }
-}

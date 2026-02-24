@@ -1,19 +1,20 @@
-﻿import { FC } from "react";
+import { FC } from "react";
 import { AnimalReportEntry } from "../animalReportEntry.ts";
-import { ActivityType } from "./activityType.tsx";
+import { Badge, Text } from "@mantine/core";
 
-export const FeedActivity: FC<{ report: AnimalReportEntry }> = ({ report }) => {
+export const FeedActivity: FC<{ report: AnimalReportEntry }> = ({
+  report,
+}) => {
   return (
     <>
-      <div>
-        <ActivityType type={report.type} />
-      </div>
-      <div>
-        <strong>Did eat:</strong> {report.didEat ? "Yes" : "No"}
-      </div>
-      <div>
-        <strong>Food type:</strong> {report.foodType}
-      </div>
+      <Badge variant="outline" color={report.didEat ? "green" : "red"} size="sm">
+        {report.didEat ? "ate" : "refused"}
+      </Badge>
+      {report.foodType && (
+        <Text size="sm" span c="dimmed">
+          {report.foodType}
+        </Text>
+      )}
     </>
   );
 };

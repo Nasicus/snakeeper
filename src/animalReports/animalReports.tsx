@@ -1,8 +1,8 @@
-﻿import { FC, useState } from "react";
+import { FC, useState } from "react";
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { useAnimalReportSubscription } from "./useAnimalReportSubscription.tsx";
 import { AnimalReportEntry } from "./animalReportEntry.ts";
-import { Flex, Title, ActionIcon, Table, Switch } from "@mantine/core";
+import { Group, Title, Card, Table, Switch, Button, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { updateDoc, deleteDoc, addDoc, collection } from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
@@ -32,51 +32,65 @@ export const AnimalReports: FC<{
 
   return (
     <>
-      <Flex align="center" justify="flex-start">
+      <Group justify="space-between" mb="md">
         <Title order={3}>Reports</Title>
-        <ActionIcon
-          ml="sm"
-          onClick={() => setReportToAdd({ type: "weighing" })}
-        >
-          <IconPlus />
-        </ActionIcon>
-        <Switch
-          ml="xs"
-          label={
-            defaultDateMode === "today"
-              ? "Use 'Today' as default date"
-              : "Use last report date as default date"
-          }
-          checked={defaultDateMode === "today"}
-          onChange={(e) =>
-            setDefaultDateMode(e.currentTarget.checked ? "today" : "lastReport")
-          }
-        />
-      </Flex>
-      <Table striped>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Activities</Table.Th>
-            <Table.Th>Notes</Table.Th>
-            <Table.Th></Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {sortedReports.map((report) => (
-            <ReportRow
-              key={report.id}
-              report={report}
-              onUpdate={async (u) => {
-                await updateDoc(report.docRef, u);
-                updateAnimalIfRequired(u);
-              }}
-              onDelete={() => deleteDoc(report.docRef)}
-              previousReports={sortedReports}
-            />
-          ))}
-        </Table.Tbody>
-      </Table>
+        <Group>
+          <Switch
+            label={
+              defaultDateMode === "today"
+                ? "Use 'Today' as default date"
+                : "Use last report date as default date"
+            }
+            checked={defaultDateMode === "today"}
+            onChange={(e) =>
+              setDefaultDateMode(
+                e.currentTarget.checked ? "today" : "lastReport",
+              )
+            }
+          />
+          <Button
+            leftSection={<IconPlus size={16} />}
+            size="sm"
+            onClick={() => setReportToAdd({ type: "weighing" })}
+          >
+            Add Report
+          </Button>
+        </Group>
+      </Group>
+
+      <Card shadow="sm" padding="md" withBorder>
+        {sortedReports.length === 0 ? (
+          <Text c="dimmed" ta="center" py="lg">
+            No reports yet
+          </Text>
+        ) : (
+          <Table striped>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Date</Table.Th>
+                <Table.Th>Activities</Table.Th>
+                <Table.Th>Notes</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {sortedReports.map((report) => (
+                <ReportRow
+                  key={report.id}
+                  report={report}
+                  onUpdate={async (u) => {
+                    await updateDoc(report.docRef, u);
+                    updateAnimalIfRequired(u);
+                  }}
+                  onDelete={() => deleteDoc(report.docRef)}
+                  previousReports={sortedReports}
+                />
+              ))}
+            </Table.Tbody>
+          </Table>
+        )}
+      </Card>
+
       <AddReport
         report={reportToAdd}
         defaultDateMode={defaultDateMode}

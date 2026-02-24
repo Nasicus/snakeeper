@@ -1,18 +1,13 @@
-﻿import { FC } from "react";
+import { FC } from "react";
 import { AnimalReportEntry } from "../animalReportEntry.ts";
-import { ActivityType } from "./activityType.tsx";
+import { Text } from "@mantine/core";
 
 export const WeighingActivity: FC<{ report: AnimalReportEntry }> = ({
   report,
 }) => {
   return (
-    <>
-      <div>
-        <ActivityType type={report.type} />
-      </div>
-      <div>
-        <strong>Weight:</strong> {report.weightInGrams} grams
-      </div>
-    </>
+    <Text size="sm" span c="dimmed">
+      {report.weightInGrams}g
+    </Text>
   );
 };

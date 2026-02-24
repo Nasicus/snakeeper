@@ -1,6 +1,7 @@
-﻿import { DatePicker } from "@mantine/dates";
+import { DatePicker } from "@mantine/dates";
 import { FC, Dispatch, SetStateAction, useEffect } from "react";
 import { AnimalReportEntry } from "../animalReportEntry.ts";
+import { Text } from "@mantine/core";
 
 export const DatePickerEditor: FC<{
   report: AnimalReportEntry | null;
@@ -21,7 +22,9 @@ export const DatePickerEditor: FC<{
 
   return (
     <>
-      <strong>When</strong>
+      <Text fw={500} size="sm">
+        When
+      </Text>
       <DatePicker
         defaultDate={report?.date || lastDate}
         value={dateValue}

@@ -1,113 +1,84 @@
-﻿import { FC, useState } from "react";
+import { FC, useState } from "react";
 import { Animal } from "../animal/animal.ts";
-import { Flex, Title, ActionIcon, Text } from "@mantine/core";
-import { AnimalNameEditor } from "../animal/editors/AnimalNameEditor.tsx";
-import { IconPencil, IconDeviceFloppy, IconX } from "@tabler/icons-react";
+import { Card, Group, Title, ActionIcon, Text, SimpleGrid } from "@mantine/core";
+import { IconPencil, IconArrowLeft } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import { AnimalTypeEditor } from "../animal/editors/AnimalTypeEditor.tsx";
-import { AnimalSubTypeEditor } from "../animal/editors/AnimalSubTypeEditor.tsx";
-import { AnimalSexEditor } from "../animal/editors/AnimalSexEditor.tsx";
+import { AnimalFormModal } from "../animalsOverview/AnimalFormModal.tsx";
 
 export const AnimalDetails: FC<{
   animal: Animal;
   onUpdate: (animal: Animal) => unknown;
 }> = ({ animal, onUpdate }) => {
   const [animalToEdit, setAnimalToEdit] = useState<Animal | null>(null);
-  const isEditMode = !!animalToEdit;
 
   return (
     <>
-      <Flex align="center" justify="flex-start">
-        {!isEditMode && (
-          <Title order={2} mr="sm">
-            {animal.name}
-          </Title>
-        )}
-        {isEditMode && (
-          <AnimalNameEditor
-            animal={animalToEdit}
-            changeAnimal={setAnimalToEdit}
-          />
-        )}
-        {!isEditMode && (
-          <>
-            <ActionIcon onClick={() => setAnimalToEdit(animal)} mr="sm">
-              <IconPencil />
-            </ActionIcon>
-            <Link to="/">Back</Link>
-          </>
-        )}
-        {isEditMode && (
-          <>
+      <Card shadow="sm" padding="lg" withBorder mb="lg">
+        <Group justify="space-between" mb="md">
+          <Group>
             <ActionIcon
-              onClick={() => {
-                onUpdate(animalToEdit);
-                setAnimalToEdit(null);
-              }}
-              disabled={!animalToEdit?.name}
-              ml="sm"
-              mr="sm"
+              variant="subtle"
+              component={Link}
+              to="/"
             >
-              <IconDeviceFloppy />
+              <IconArrowLeft size={20} />
             </ActionIcon>
-            <ActionIcon onClick={() => setAnimalToEdit(null)}>
-              <IconX />
-            </ActionIcon>
-          </>
-        )}
-      </Flex>
+            <Title order={2}>{animal.name}</Title>
+          </Group>
+          <ActionIcon variant="subtle" onClick={() => setAnimalToEdit(animal)}>
+            <IconPencil size={20} />
+          </ActionIcon>
+        </Group>
 
-      <Flex justify="space-between" mt="sm" mb="xl">
-        <div>
-          <Text fw={700} display="block">
-            Type
-          </Text>
-          {!isEditMode && animal.type}
-          {isEditMode && (
-            <AnimalTypeEditor
-              animal={animalToEdit}
-              changeAnimal={setAnimalToEdit}
-            />
-          )}
-        </div>
-        <div>
-          <Text fw={700} display="block">
-            Subtype
-          </Text>
-          {!isEditMode && animal.subType}
-          {isEditMode && (
-            <AnimalSubTypeEditor
-              animal={animalToEdit}
-              changeAnimal={setAnimalToEdit}
-            />
-          )}
-        </div>
-        <div>
-          <Text fw={700} display="block">
-            Sex
-          </Text>
-          {!isEditMode && animal.sex}
-          {isEditMode && (
-            <AnimalSexEditor
-              animal={animalToEdit}
-              changeAnimal={setAnimalToEdit}
-            />
-          )}
-        </div>
-        <div>
-          <Text fw={700} display="block">
-            Date Of Birth
-          </Text>
+        <SimpleGrid cols={{ base: 2, sm: 4 }}>
+          <div>
+            <Text size="sm" c="dimmed">
+              Type
+            </Text>
+            <Text fw={500}>{animal.type || "-"}</Text>
+          </div>
+          <div>
+            <Text size="sm" c="dimmed">
+              Subtype
+            </Text>
+            <Text fw={500}>{animal.subType || "-"}</Text>
+          </div>
+          <div>
+            <Text size="sm" c="dimmed">
+              Sex
+            </Text>
+            <Text fw={500}>{animal.sex || "-"}</Text>
+          </div>
+          <div>
+            <Text size="sm" c="dimmed">
+              Date of Birth
+            </Text>
+            <Text fw={500}>
+              {animal.dateOfBirth ? (
+                <>
+                  {animal.dateOfBirth.toDateString()} (
+                  {getAge(animal.dateOfBirth)})
+                </>
+              ) : (
+                "-"
+              )}
+            </Text>
+          </div>
+        </SimpleGrid>
+      </Card>
 
-          {animal.dateOfBirth ? (
-            <>
-              {animal.dateOfBirth.toDateString()} ({getAge(animal.dateOfBirth)})
-            </>
-          ) : (
-            "-"
-          )}
-        </div>
-      </Flex>
+      <AnimalFormModal
+        animal={animalToEdit}
+        changeAnimal={setAnimalToEdit}
+        onSave={() => {
+          if (animalToEdit) {
+            onUpdate(animalToEdit);
+            setAnimalToEdit(null);
+          }
+        }}
+        onCancel={() => setAnimalToEdit(null)}
+        title="Edit Animal"
+      />
     </>
   );
 
@@ -117,6 +88,6 @@ export const AnimalDetails: FC<{
     months = (now.getFullYear() - date.getFullYear()) * 12;
     months -= date.getMonth();
     months += now.getMonth();
-    return months <= 0 ? `-` : `${(months/12).toFixed(1)} years`;
+    return months <= 0 ? `-` : `${(months / 12).toFixed(1)} years`;
   }
 };

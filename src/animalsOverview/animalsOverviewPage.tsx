@@ -1,49 +1,77 @@
-﻿import { FC, useState } from "react";
-import { collection, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { FC, useState } from "react";
+import { collection, addDoc, deleteDoc, updateDoc, DocumentReference } from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
-import { Table, Title } from "@mantine/core";
+import { Title, SimpleGrid, Group, Button } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 import { useAnimalsSubscription } from "./useAnimalsSubscription.tsx";
 import { Animal } from "../animal/animal.ts";
-import { EditableAnimalRow } from "./editableAnimalRow.tsx";
-import { ReadOnlyAnimalRow } from "./readOnlyAnimalRow.tsx";
+import { AnimalCard } from "./AnimalCard.tsx";
+import { AnimalFormModal } from "./AnimalFormModal.tsx";
 
 export const AnimalsOverviewPage: FC = () => {
   const user = useAuthenticatedUser();
-
   const animals = useAnimalsSubscription();
 
   const [animalToAdd, setAnimalToAdd] = useState<Animal | null>(null);
+  const [animalToEdit, setAnimalToEdit] = useState<{
+    animal: Animal;
+    docRef: DocumentReference;
+  } | null>(null);
 
   return (
     <>
-      <Title order={2}>Animals</Title>
-      <Table striped>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Type</Table.Th>
-            <Table.Th>Subtype</Table.Th>
-            <Table.Th>Sex</Table.Th>
-            <Table.Th></Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {animals?.map((a) => (
-            <ReadOnlyAnimalRow
-              key={a.id}
-              animal={a}
-              onDelete={() => deleteDoc(a.docRef)}
-              onUpdate={(u) => updateDoc(a.docRef, u)}
-            />
-          ))}
-          <EditableAnimalRow
-            animal={animalToAdd}
-            changeAnimal={setAnimalToAdd}
-            saveChanges={addAnimal}
+      <Group justify="space-between" mb="md">
+        <Title order={2}>My Animals</Title>
+        <Button
+          leftSection={<IconPlus size={16} />}
+          onClick={() => setAnimalToAdd({})}
+        >
+          Add Animal
+        </Button>
+      </Group>
+      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+        {animals?.map((a) => (
+          <AnimalCard
+            key={a.id}
+            animal={a}
+            onEdit={() => setAnimalToEdit({ animal: a, docRef: a.docRef })}
+            onDelete={() => deleteDoc(a.docRef)}
           />
-        </Table.Tbody>
-      </Table>
+        ))}
+      </SimpleGrid>
+
+      <AnimalFormModal
+        animal={animalToAdd}
+        changeAnimal={setAnimalToAdd}
+        onSave={addAnimal}
+        onCancel={() => setAnimalToAdd(null)}
+      />
+
+      <AnimalFormModal
+        animal={animalToEdit?.animal ?? null}
+        changeAnimal={(updater) => {
+          setAnimalToEdit((prev) => {
+            if (!prev) {
+              return null;
+            }
+            const next =
+              typeof updater === "function" ? updater(prev.animal) : updater;
+            if (!next) {
+              return null;
+            }
+            return { ...prev, animal: next };
+          });
+        }}
+        onSave={() => {
+          if (animalToEdit) {
+            updateDoc(animalToEdit.docRef, animalToEdit.animal);
+            setAnimalToEdit(null);
+          }
+        }}
+        onCancel={() => setAnimalToEdit(null)}
+        title="Edit Animal"
+      />
     </>
   );
 
@@ -56,4 +84,3 @@ export const AnimalsOverviewPage: FC = () => {
     setAnimalToAdd(null);
   }
 };
-

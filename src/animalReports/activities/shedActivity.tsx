@@ -1,16 +1,13 @@
-﻿import { FC } from "react";
+import { FC } from "react";
 import { AnimalReportEntry } from "../animalReportEntry.ts";
-import { ActivityType } from "./activityType.tsx";
+import { Badge } from "@mantine/core";
 
-export const ShedActivity: FC<{ report: AnimalReportEntry }> = ({ report }) => {
+export const ShedActivity: FC<{ report: AnimalReportEntry }> = ({
+  report,
+}) => {
   return (
-    <>
-      <div>
-        <ActivityType type={report.type} />
-      </div>
-      <div>
-        <strong>Shed type:</strong> {report.shedType}
-      </div>
-    </>
+    <Badge variant="outline" color="yellow" size="sm">
+      {report.shedType}
+    </Badge>
   );
 };
