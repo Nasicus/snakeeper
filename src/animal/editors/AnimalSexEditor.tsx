@@ -8,6 +8,7 @@ export const AnimalSexEditor: FC<{
 }> = ({ animal, changeAnimal }) => {
   return (
     <Select
+      label="Sex"
       value={animal?.sex}
       data={[
         { value: "male", label: "Male" },

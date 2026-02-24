@@ -1,5 +1,5 @@
 ﻿import { FC, Dispatch, SetStateAction } from "react";
-import { Input } from "@mantine/core";
+import { TextInput } from "@mantine/core";
 import { Animal } from "../animal.ts";
 
 export const AnimalNameEditor: FC<{
@@ -7,7 +7,8 @@ export const AnimalNameEditor: FC<{
   changeAnimal: Dispatch<SetStateAction<Animal | null>>;
 }> = ({ animal, changeAnimal }) => {
   return (
-    <Input
+    <TextInput
+      label="Name"
       value={animal?.name ?? ""}
       onChange={(e) =>
         changeAnimal((a) => ({ ...a, name: e.currentTarget.value }))
