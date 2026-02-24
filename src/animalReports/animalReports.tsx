@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
-import { useAnimalReportSubscription } from "./useAnimalReportSubscription.tsx";
+import { AnimalReportEntryDocument } from "./useAnimalReportSubscription.tsx";
 import { AnimalReportEntry } from "./animalReportEntry.ts";
 import { Group, Title, Card, Table, Switch, Button, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
@@ -12,12 +12,12 @@ import { Animal } from "../animal/animal.ts";
 
 export const AnimalReports: FC<{
   animalId: string | undefined;
+  reports: AnimalReportEntryDocument[];
   updateAnimalFields: (animal: Partial<Animal>) => unknown;
-}> = ({ animalId, updateAnimalFields }) => {
+}> = ({ animalId, reports, updateAnimalFields }) => {
   const user = useAuthenticatedUser();
 
-  const reports = useAnimalReportSubscription(animalId);
-  const sortedReports = reports.sort(
+  const sortedReports = [...reports].sort(
     (a, b) =>
       (b.date || new Date()).getTime() - (a.date || new Date()).getTime(),
   );

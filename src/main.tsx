@@ -4,6 +4,7 @@ import { App } from "./app.tsx";
 import { initializeFirebase } from "./firebase.ts";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
 import {
   MantineProvider,
   createTheme,

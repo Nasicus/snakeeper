@@ -4,12 +4,16 @@ import { updateDoc } from "firebase/firestore";
 import { useAnimalSubscription } from "../animal/useAnimalSubscription.tsx";
 import { AnimalDetails } from "./animalDetails.tsx";
 import { AnimalReports } from "../animalReports/animalReports.tsx";
-import { Center, Loader, Stack, Text } from "@mantine/core";
+import { AnimalStats } from "../animalStats/animalStats.tsx";
+import { useAnimalReportSubscription } from "../animalReports/useAnimalReportSubscription.tsx";
+import { Center, Loader, Stack, Tabs, Text } from "@mantine/core";
+import { IconList, IconChartLine } from "@tabler/icons-react";
 
 export const AnimalDetailPage: FC = () => {
   const { animalId } = useParams();
 
   const { animal, isLoading } = useAnimalSubscription(animalId);
+  const reports = useAnimalReportSubscription(animalId);
 
   if (isLoading) {
     return (
@@ -29,12 +33,28 @@ export const AnimalDetailPage: FC = () => {
         animal={animal}
         onUpdate={(u) => updateDoc(animal.docRef, u)}
       />
-      <AnimalReports
-        animalId={animalId}
-        updateAnimalFields={(u) =>
-          updateDoc(animal.docRef, { ...animal, ...u })
-        }
-      />
+      <Tabs defaultValue="reports">
+        <Tabs.List>
+          <Tabs.Tab value="reports" leftSection={<IconList size={16} />}>
+            Reports
+          </Tabs.Tab>
+          <Tabs.Tab value="stats" leftSection={<IconChartLine size={16} />}>
+            Stats
+          </Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="reports" pt="md">
+          <AnimalReports
+            animalId={animalId}
+            reports={reports}
+            updateAnimalFields={(u) =>
+              updateDoc(animal.docRef, { ...animal, ...u })
+            }
+          />
+        </Tabs.Panel>
+        <Tabs.Panel value="stats" pt="md">
+          <AnimalStats reports={reports} />
+        </Tabs.Panel>
+      </Tabs>
     </Stack>
   );
 };
