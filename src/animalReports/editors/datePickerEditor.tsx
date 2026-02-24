@@ -11,25 +11,40 @@ export const DatePickerEditor: FC<{
 
   useEffect(() => {
     if (report && lastDate && !report?.date) {
-      changeDate(lastDate);
+      changeDate(toDateString(lastDate));
     }
   }, [lastDate]);
+
+  const dateValue = report?.date
+    ? toDateString(report.date)
+    : toDateString(lastDate);
 
   return (
     <>
       <strong>When</strong>
       <DatePicker
         defaultDate={report?.date || lastDate}
-        value={report?.date || lastDate}
+        value={dateValue}
         onChange={changeDate}
       />
     </>
   );
 
-  function changeDate(v: Date | null) {
+  function changeDate(v: string | null) {
     updateReport((prev) => ({
       ...prev,
-      date: v || new Date(),
+      date: v ? new Date(v) : new Date(),
     }));
   }
 };
+
+function toDateString(d: Date | undefined): string | null {
+  if (!d) {
+    return null;
+  }
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
