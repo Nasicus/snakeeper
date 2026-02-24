@@ -13,7 +13,7 @@ export function useFireBaseAuthentication() {
   const auth = getAuth();
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    return auth.onAuthStateChanged((user) => {
       setAuthenticatedUser(user ?? null);
     });
   }, []);

@@ -42,7 +42,7 @@ export const ReportRow: FC<{
             {report.type === "feeding" && <FeedActivity report={report} />}
             {report.type === "shedding" && <ShedActivity report={report} />}
             {report.type === "weighing" && <WeighingActivity report={report} />}
-            {(report.type === "born" || report.type == "died") && (
+            {(report.type === "born" || report.type === "died") && (
               <ActivityType type={report.type} />
             )}
           </Group>
