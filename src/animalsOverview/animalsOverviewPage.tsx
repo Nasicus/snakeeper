@@ -1,5 +1,10 @@
 import { FC, useState } from "react";
-import { collection, addDoc, deleteDoc, updateDoc, DocumentReference } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  DocumentReference,
+} from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
 import { useAuthenticatedUser } from "../authentication/authenticatedUserContext.tsx";
 import { Title, SimpleGrid, Group, Button } from "@mantine/core";
@@ -8,6 +13,7 @@ import { useAnimalsSubscription } from "./useAnimalsSubscription.tsx";
 import { Animal } from "../animal/animal.ts";
 import { AnimalCard } from "./AnimalCard.tsx";
 import { AnimalFormModal } from "./AnimalFormModal.tsx";
+import { DeleteAnimalModal } from "./DeleteAnimalModal.tsx";
 
 export const AnimalsOverviewPage: FC = () => {
   const user = useAuthenticatedUser();
@@ -16,6 +22,10 @@ export const AnimalsOverviewPage: FC = () => {
   const [animalToAdd, setAnimalToAdd] = useState<Animal | null>(null);
   const [animalToEdit, setAnimalToEdit] = useState<{
     animal: Animal;
+    docRef: DocumentReference;
+  } | null>(null);
+  const [animalToDelete, setAnimalToDelete] = useState<{
+    name: string;
     docRef: DocumentReference;
   } | null>(null);
 
@@ -36,7 +46,12 @@ export const AnimalsOverviewPage: FC = () => {
             key={a.id}
             animal={a}
             onEdit={() => setAnimalToEdit({ animal: a, docRef: a.docRef })}
-            onDelete={() => deleteDoc(a.docRef)}
+            onDelete={() =>
+              setAnimalToDelete({
+                name: a.name ?? "this animal",
+                docRef: a.docRef,
+              })
+            }
           />
         ))}
       </SimpleGrid>
@@ -46,6 +61,11 @@ export const AnimalsOverviewPage: FC = () => {
         changeAnimal={setAnimalToAdd}
         onSave={addAnimal}
         onCancel={() => setAnimalToAdd(null)}
+      />
+
+      <DeleteAnimalModal
+        animal={animalToDelete}
+        onClose={() => setAnimalToDelete(null)}
       />
 
       <AnimalFormModal
