@@ -16,9 +16,7 @@ export type AnimalStatsData = {
   shedCycles: { date: string; days: number }[];
 };
 
-export function useAnimalStats(
-  reports: AnimalReportEntry[],
-): AnimalStatsData {
+export function useAnimalStats(reports: AnimalReportEntry[]): AnimalStatsData {
   return useMemo(() => computeStats(reports), [reports]);
 }
 
@@ -34,7 +32,10 @@ function computeStats(reports: AnimalReportEntry[]): AnimalStatsData {
     (r) => r.type === "feeding" && r.didEat === true,
   );
   const sheds = dated.filter(
-    (r) => r.type === "shedding" && r.shedType === "success",
+    (r) =>
+      (r.type === "shedding" && r.shedType === "success") ||
+      r.shedType === "failed" ||
+      r.shedType === "partial",
   );
 
   const weightOverTime = weighings.map((r) => ({
@@ -61,8 +62,7 @@ function computeStats(reports: AnimalReportEntry[]): AnimalStatsData {
 
   const lastFedDate =
     feedings.length > 0 ? feedings[feedings.length - 1].date! : null;
-  const lastShedDate =
-    sheds.length > 0 ? sheds[sheds.length - 1].date! : null;
+  const lastShedDate = sheds.length > 0 ? sheds[sheds.length - 1].date! : null;
   const lastWeighedDate =
     weighings.length > 0 ? weighings[weighings.length - 1].date! : null;
 
