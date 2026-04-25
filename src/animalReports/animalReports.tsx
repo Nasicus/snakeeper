@@ -4,7 +4,13 @@ import { AnimalReportEntryDocument } from "./useAnimalReportSubscription.tsx";
 import { AnimalReportEntry } from "./animalReportEntry.ts";
 import { Group, Title, Card, Table, Switch, Button, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { updateDoc, deleteDoc, addDoc, collection } from "firebase/firestore";
+import {
+  updateDoc,
+  deleteDoc,
+  addDoc,
+  collection,
+  DocumentReference,
+} from "firebase/firestore";
 import { firestoreDb } from "../firebase.ts";
 import { ReportRow } from "./reportRow.tsx";
 import { AddReport } from "./addReport.tsx";
@@ -25,6 +31,11 @@ export const AnimalReports: FC<{
   const [reportToAdd, setReportToAdd] = useState<AnimalReportEntry | null>(
     null,
   );
+
+  const [reportToEdit, setReportToEdit] = useState<AnimalReportEntry | null>(
+    null,
+  );
+  const [editDocRef, setEditDocRef] = useState<DocumentReference | null>(null);
 
   const [defaultDateMode, setDefaultDateMode] = useState<
     "today" | "lastReport"
@@ -78,12 +89,11 @@ export const AnimalReports: FC<{
                 <ReportRow
                   key={report.id}
                   report={report}
-                  onUpdate={async (u) => {
-                    await updateDoc(report.docRef, u);
-                    updateAnimalIfRequired(u);
+                  onEdit={() => {
+                    setReportToEdit(report);
+                    setEditDocRef(report.docRef);
                   }}
                   onDelete={() => deleteDoc(report.docRef)}
-                  previousReports={sortedReports}
                 />
               ))}
             </Table.Tbody>
@@ -98,6 +108,14 @@ export const AnimalReports: FC<{
         updateReport={setReportToAdd}
         onSave={addReport}
         onCancel={() => setReportToAdd(null)}
+      />
+
+      <AddReport
+        report={reportToEdit}
+        previousReports={sortedReports}
+        updateReport={setReportToEdit}
+        onSave={saveEdit}
+        onCancel={cancelEdit}
       />
     </>
   );
@@ -115,6 +133,21 @@ export const AnimalReports: FC<{
     updateAnimalIfRequired(reportToAdd);
 
     setReportToAdd(null);
+  }
+
+  async function saveEdit() {
+    if (!reportToEdit || !editDocRef) {
+      return;
+    }
+
+    await updateDoc(editDocRef, reportToEdit);
+    updateAnimalIfRequired(reportToEdit);
+    cancelEdit();
+  }
+
+  function cancelEdit() {
+    setReportToEdit(null);
+    setEditDocRef(null);
   }
 
   function updateAnimalIfRequired(report: AnimalReportEntry) {
