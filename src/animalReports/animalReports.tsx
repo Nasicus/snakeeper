@@ -94,7 +94,7 @@ export const AnimalReports: FC<{
       <AddReport
         report={reportToAdd}
         defaultDateMode={defaultDateMode}
-        previousReports={reports}
+        previousReports={sortedReports}
         updateReport={setReportToAdd}
         onSave={addReport}
         onCancel={() => setReportToAdd(null)}
